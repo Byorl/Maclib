@@ -1,17 +1,22 @@
-# Maclib UI Library
+# Byorl Maclib UI Library
 ![image](https://github.com/user-attachments/assets/991cd465-8a61-4753-9fa6-dfd590bc4322)
 
-- Extensive Documentation
-- Beautiful Interface
-- Consistent Updates
-- And much more!
+- Nested subtabs with independent one-column or two-column pages
+- Stable sliders while the window is resized or scaled
+- Literal percentage input and display support
+- Responsive stacked slider and text-input layouts
+- Compatible with the original Maclib element API
 
-Join the discord - https://discord.gg/FWC8PpWtQv
+```lua
+local MacLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Byorl/Maclib/main/src/maclib.lua"))()
+```
 
-## Resources:
+## Resources
 
-- [Maclib Documentation (Gitbook)](https://brady-xyz.gitbook.io/maclib-ui-library)
+- [Fork documentation](Documentation.md)
+- [Original Maclib documentation](https://brady-xyz.gitbook.io/maclib-ui-library)
 
-## Credits:
+## Credits
 
-- [dawid-scripts/Fluent](https://github.com/dawid-scripts/Fluent) - Configuration system.
+- [biggaboy212/Maclib](https://github.com/biggaboy212/Maclib)
+- [dawid-scripts/Fluent](https://github.com/dawid-scripts/Fluent)

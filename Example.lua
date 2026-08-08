@@ -1,4 +1,4 @@
-local MacLib = loadstring(game:HttpGet("https://github.com/biggaboy212/Maclib/releases/latest/download/maclib.txt"))()
+local MacLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Byorl/Maclib/main/src/maclib.lua"))()
 
 local Window = MacLib:Window({
 	Title = "Maclib Demo",
@@ -20,7 +20,7 @@ local globalSettings = {
 			Window:Notify({
 				Title = Window.Settings.Title,
 				Description = (bool and "Enabled" or "Disabled") .. " UI Blur",
-				Lifetime = 5
+				Lifetime = 5,
 			})
 		end,
 	}),
@@ -32,7 +32,7 @@ local globalSettings = {
 			Window:Notify({
 				Title = Window.Settings.Title,
 				Description = (bool and "Enabled" or "Disabled") .. " Notifications",
-				Lifetime = 5
+				Lifetime = 5,
 			})
 		end,
 	}),
@@ -44,27 +44,36 @@ local globalSettings = {
 			Window:Notify({
 				Title = Window.Settings.Title,
 				Description = (bool and "Showing" or "Redacted") .. " User Info",
-				Lifetime = 5
+				Lifetime = 5,
 			})
 		end,
-	})
+	}),
 }
 
 local tabGroups = {
-	TabGroup1 = Window:TabGroup()
+	TabGroup1 = Window:TabGroup(),
 }
 
 local tabs = {
 	Main = tabGroups.TabGroup1:Tab({ Name = "Demo", Image = "rbxassetid://18821914323" }),
-	Settings = tabGroups.TabGroup1:Tab({ Name = "Settings", Image = "rbxassetid://10734950309" })
+	Settings = tabGroups.TabGroup1:Tab({ Name = "Settings", Image = "rbxassetid://10734950309" }),
 }
+
+local demoPages = tabs.Main:SubTabGroup()
+local controlsPage = demoPages:SubTab({ Name = "Controls", Columns = 2 })
+local compactPage = demoPages:SubTab({ Name = "Compact", Columns = 1 })
 
 local sections = {
-	MainSection1 = tabs.Main:Section({ Side = "Left" }),
+	MainSection1 = controlsPage:Section({ Side = "Left" }),
+	Compact = compactPage:Section({ Side = "Left" }),
 }
 
+sections.Compact:Header({ Text = "Single-column subtab" })
+sections.Compact:Label({ Text = "This page uses the full content width." })
+controlsPage:Select()
+
 sections.MainSection1:Header({
-	Name = "Header #1"
+	Name = "Header #1",
 })
 
 sections.MainSection1:Button({
@@ -81,9 +90,9 @@ sections.MainSection1:Button({
 					end,
 				},
 				{
-					Name = "Cancel"
-				}
-			}
+					Name = "Cancel",
+				},
+			},
 		})
 	end,
 })
@@ -95,7 +104,7 @@ sections.MainSection1:Input({
 	Callback = function(input)
 		Window:Notify({
 			Title = Window.Settings.Title,
-			Description = "Successfully set input to " .. input
+			Description = "Successfully set input to " .. input,
 		})
 	end,
 	onChanged = function(input)
@@ -111,8 +120,8 @@ sections.MainSection1:Slider({
 	DisplayMethod = "Percent",
 	Precision = 0,
 	Callback = function(Value)
-		print("Changed to ".. Value)
-	end
+		print("Changed to " .. Value)
+	end,
 }, "Slider")
 
 sections.MainSection1:Toggle({
@@ -121,7 +130,7 @@ sections.MainSection1:Toggle({
 	Callback = function(value)
 		Window:Notify({
 			Title = Window.Settings.Title,
-			Description = (value and "Enabled " or "Disabled ") .. "Toggle"
+			Description = (value and "Enabled " or "Disabled ") .. "Toggle",
 		})
 	end,
 }, "Toggle")
@@ -132,15 +141,15 @@ sections.MainSection1:Keybind({
 	Callback = function(binded)
 		Window:Notify({
 			Title = "Demo Window",
-			Description = "Pressed keybind - "..tostring(binded.Name),
-			Lifetime = 3
+			Description = "Pressed keybind - " .. tostring(binded.Name),
+			Lifetime = 3,
 		})
 	end,
 	onBinded = function(bind)
 		Window:Notify({
 			Title = "Demo Window",
-			Description = "Successfully Binded Keybind to - "..tostring(bind.Name),
-			Lifetime = 3
+			Description = "Successfully Binded Keybind to - " .. tostring(bind.Name),
+			Lifetime = 3,
 		})
 	end,
 }, "Keybind")
@@ -155,7 +164,7 @@ sections.MainSection1:Colorpicker({
 
 local alphaColorPicker = sections.MainSection1:Colorpicker({
 	Name = "Transparency Colorpicker",
-	Default = Color3.fromRGB(255,0,0),
+	Default = Color3.fromRGB(255, 0, 0),
 	Alpha = 0,
 	Callback = function(color, alpha)
 		print("Color: ", color, " Alpha: ", alpha)
@@ -194,7 +203,7 @@ local optionTable = {
 	"Strawberry",
 	"Blueberry",
 	"Watermelon",
-	"Peach"
+	"Peach",
 }
 
 local Dropdown = sections.MainSection1:Dropdown({
@@ -204,7 +213,7 @@ local Dropdown = sections.MainSection1:Dropdown({
 	Options = optionTable,
 	Default = 1,
 	Callback = function(Value)
-		print("Dropdown changed: ".. Value)
+		print("Dropdown changed: " .. Value)
 	end,
 }, "Dropdown")
 
@@ -214,7 +223,7 @@ local MultiDropdown = sections.MainSection1:Dropdown({
 	Multi = true,
 	Required = false,
 	Options = optionTable,
-	Default = {"Apple", "Orange"},
+	Default = { "Apple", "Orange" },
 	Callback = function(Value)
 		local Values = {}
 		for Value, State in next, Value do
@@ -228,27 +237,27 @@ sections.MainSection1:Button({
 	Name = "Update Selection",
 	Callback = function()
 		Dropdown:UpdateSelection("Grapes")
-		MultiDropdown:UpdateSelection({"Banana", "Pineapple"})
+		MultiDropdown:UpdateSelection({ "Banana", "Pineapple" })
 	end,
 })
 
 sections.MainSection1:Divider()
 
 sections.MainSection1:Header({
-	Text = "Header #2"
+	Text = "Header #2",
 })
 
 sections.MainSection1:Paragraph({
 	Header = "Paragraph",
-	Body = "Paragraph body. Lorem ipsum odor amet, consectetuer adipiscing elit. Morbi tempus netus aliquet per velit est gravida."
+	Body = "Paragraph body. Lorem ipsum odor amet, consectetuer adipiscing elit. Morbi tempus netus aliquet per velit est gravida.",
 })
 
 sections.MainSection1:Label({
-	Text = "Label. Lorem ipsum odor amet, consectetuer adipiscing elit."
+	Text = "Label. Lorem ipsum odor amet, consectetuer adipiscing elit.",
 })
 
 sections.MainSection1:SubLabel({
-	Text = "Sub-Label. Lorem ipsum odor amet, consectetuer adipiscing elit."
+	Text = "Sub-Label. Lorem ipsum odor amet, consectetuer adipiscing elit.",
 })
 
 MacLib:SetFolder("Maclib")
