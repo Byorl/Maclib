@@ -23,6 +23,32 @@ local windowState
 local acrylicBlur
 local hasGlobalSetting
 
+local function elevateThreadIdentity()
+	local environment = (getgenv and getgenv()) or _G
+	local setter = rawget(environment, "setthreadidentity") or rawget(environment, "setidentity")
+	local getter = rawget(environment, "getthreadidentity") or rawget(environment, "getidentity")
+	local synTable = rawget(environment, "syn")
+	if not setter and type(synTable) == "table" then
+		setter = synTable.set_thread_identity
+	end
+	if not getter and type(synTable) == "table" then
+		getter = synTable.get_thread_identity
+	end
+	if type(setter) ~= "function" then
+		return function() end
+	end
+	local hadPrevious, previous = false, nil
+	if type(getter) == "function" then
+		hadPrevious, previous = pcall(getter)
+	end
+	pcall(setter, 8)
+	return function()
+		if hadPrevious then
+			pcall(setter, previous)
+		end
+	end
+end
+
 local tabs = {}
 local currentTabInstance = nil
 local tabIndex = 0
@@ -5150,6 +5176,7 @@ function MacLib:Window(Settings)
 	end
 
 	function WindowFunctions:Notify(Settings)
+		local restoreIdentity = elevateThreadIdentity()
 		local NotificationFunctions = {}
 
 		local notification = Instance.new("Frame")
@@ -5366,6 +5393,7 @@ function MacLib:Window(Settings)
 			notification:Destroy()
 		end
 
+		restoreIdentity()
 		return NotificationFunctions
 	end
 
@@ -5647,11 +5675,13 @@ function MacLib:Window(Settings)
 	local onUnloadCallback
 
 	function WindowFunctions:Unload()
+		local restoreIdentity = elevateThreadIdentity()
 		if onUnloadCallback then
 			onUnloadCallback()
 		end
 		macLib:Destroy()
 		unloaded = true
+		restoreIdentity()
 	end
 
 	function WindowFunctions.onUnloaded(callback)
