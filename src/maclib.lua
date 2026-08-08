@@ -2214,7 +2214,7 @@ function MacLib:Window(Settings)
 					inputBox.TextSize = 12
 					inputBox.TextTransparency = 0.1
 					inputBox.AnchorPoint = Vector2.new(1, 0)
-					inputBox.AutomaticSize = Enum.AutomaticSize.X
+					inputBox.AutomaticSize = Enum.AutomaticSize.None
 					inputBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 					inputBox.BackgroundTransparency = 0.95
 					inputBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -2222,7 +2222,7 @@ function MacLib:Window(Settings)
 					inputBox.ClipsDescendants = true
 					inputBox.LayoutOrder = 1
 					inputBox.Position = UDim2.new(1, 0, 0, 28)
-					inputBox.Size = UDim2.fromOffset(21, 21)
+					inputBox.Size = UDim2.new(1, 0, 0, 28)
 					inputBox.TextXAlignment = Enum.TextXAlignment.Left
 
 					local inputBoxUICorner = Instance.new("UICorner")
@@ -2289,7 +2289,7 @@ function MacLib:Window(Settings)
 							or CharacterSubs.All
 					end
 
-					InputBox.AutomaticSize = Enum.AutomaticSize.X
+					InputBox.AutomaticSize = Enum.AutomaticSize.None
 
 					local function checkSize()
 						local totalWidth = Input.AbsoluteSize.X
