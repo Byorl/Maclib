@@ -2021,6 +2021,9 @@ function MacLib:Window(Settings)
 
 					local function SetValue(val, ignorecallback)
 						local posXScale
+						local minimum = SliderFunctions.Settings.Minimum
+						local maximum = SliderFunctions.Settings.Maximum
+						local range = maximum - minimum
 
 						if typeof(val) == "Instance" then
 							local input = val
@@ -2029,15 +2032,21 @@ function MacLib:Window(Settings)
 							posXScale = math.clamp((input.Position.X - barPosition) / math.max(barWidth, 1), 0, 1)
 						else
 							local value = val
-							posXScale = (value - SliderFunctions.Settings.Minimum)
-								/ (SliderFunctions.Settings.Maximum - Settings.Minimum)
+							posXScale = range == 0 and 0 or (value - minimum) / range
 						end
+
+						local value = minimum + posXScale * range
+						local step = tonumber(SliderFunctions.Settings.Step)
+						if step and step > 0 then
+							value = minimum + math.floor(((value - minimum) / step) + 0.5) * step
+						end
+						value = math.clamp(value, minimum, maximum)
+						posXScale = range == 0 and 0 or (value - minimum) / range
 
 						local pos = UDim2.new(posXScale, 0, 0.5, 0)
 						sliderHead.Position = pos
 
-						finalValue = posXScale * (SliderFunctions.Settings.Maximum - SliderFunctions.Settings.Minimum)
-							+ Settings.Minimum
+						finalValue = value
 
 						sliderValue.Text = (Settings.Prefix or "")
 							.. ValueDisplayMethod(finalValue, SliderFunctions.Settings.Precision)
@@ -2103,7 +2112,9 @@ function MacLib:Window(Settings)
 								math.clamp(value, SliderFunctions.Settings.Minimum, SliderFunctions.Settings.Maximum)
 							SetValue(newValue)
 						else
-							sliderValue.Text = ValueDisplayMethod(sliderValue)
+							sliderValue.Text = (Settings.Prefix or "")
+								.. ValueDisplayMethod(finalValue, SliderFunctions.Settings.Precision)
+								.. (Settings.Suffix or "")
 						end
 
 						if SliderFunctions.Settings.onInputComplete then
