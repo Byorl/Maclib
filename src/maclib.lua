@@ -4789,14 +4789,15 @@ function MacLib:Window(Settings)
 				local subTabBar = Instance.new("ScrollingFrame")
 				subTabBar.Name = "SubTabBar"
 				subTabBar.AutomaticCanvasSize = Enum.AutomaticSize.X
-				subTabBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				subTabBar.BackgroundTransparency = 1
+				subTabBar.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+				subTabBar.BackgroundTransparency = 0
 				subTabBar.BorderSizePixel = 0
 				subTabBar.CanvasSize = UDim2.new()
 				subTabBar.Position = UDim2.fromOffset(11, 0)
 				subTabBar.ScrollBarThickness = 0
 				subTabBar.ScrollingDirection = Enum.ScrollingDirection.X
-				subTabBar.Size = UDim2.new(1, -19, 0, 38)
+				subTabBar.Size = UDim2.new(1, -19, 0, 34)
+				subTabBar.ZIndex = 20
 				subTabBar.Parent = elements1
 
 				local subTabBarLayout = Instance.new("UIListLayout")
@@ -4809,8 +4810,9 @@ function MacLib:Window(Settings)
 
 				local function preparePage(page, settings)
 					page.Name = "SubTabPage"
-					page.Position = UDim2.fromOffset(0, 42)
-					page.Size = UDim2.new(1, 0, 1, -42)
+					page.ClipsDescendants = true
+					page.Position = UDim2.fromOffset(0, 36)
+					page.Size = UDim2.new(1, 0, 1, -36)
 					page.Visible = false
 					page.Parent = elements1
 					local pageLeft = page:FindFirstChild("Left")
@@ -4840,40 +4842,33 @@ function MacLib:Window(Settings)
 
 					local switcher = Instance.new("TextButton")
 					switcher.Name = "SubTabSwitcher"
-					switcher.AutomaticSize = Enum.AutomaticSize.X
 					switcher.AutoButtonColor = false
 					switcher.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 					switcher.BackgroundTransparency = 1
 					switcher.BorderSizePixel = 0
 					switcher.LayoutOrder = subTabIndex
-					switcher.Size = UDim2.fromOffset(0, 32)
+					switcher.Size = UDim2.fromOffset(math.clamp(#Settings.Name * 7 + 28, 72, 150), 28)
 					switcher.Text = ""
+					switcher.ZIndex = 21
 					switcher.Parent = subTabBar
 
 					local switcherCorner = Instance.new("UICorner")
 					switcherCorner.CornerRadius = UDim.new(0, 6)
 					switcherCorner.Parent = switcher
 
-					local switcherPadding = Instance.new("UIPadding")
-					switcherPadding.PaddingLeft = UDim.new(0, 12)
-					switcherPadding.PaddingRight = UDim.new(0, 12)
-					switcherPadding.Parent = switcher
-
 					local switcherName = Instance.new("TextLabel")
 					switcherName.Name = "SubTabName"
-					switcherName.AutomaticSize = Enum.AutomaticSize.XY
+					switcherName.AnchorPoint = Vector2.new(0.5, 0.5)
 					switcherName.BackgroundTransparency = 1
 					switcherName.FontFace = Font.new(assets.interFont, Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+					switcherName.Position = UDim2.fromScale(0.5, 0.5)
+					switcherName.Size = UDim2.new(1, -12, 1, 0)
 					switcherName.Text = Settings.Name
 					switcherName.TextColor3 = Color3.fromRGB(255, 255, 255)
 					switcherName.TextSize = 14
 					switcherName.TextTransparency = 0.5
+					switcherName.ZIndex = 22
 					switcherName.Parent = switcher
-
-					local switcherLayout = Instance.new("UIListLayout")
-					switcherLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-					switcherLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-					switcherLayout.Parent = switcher
 
 					local indicator = Instance.new("Frame")
 					indicator.Name = "Indicator"
@@ -4883,6 +4878,7 @@ function MacLib:Window(Settings)
 					indicator.BorderSizePixel = 0
 					indicator.Position = UDim2.fromScale(0.5, 1)
 					indicator.Size = UDim2.new(0.65, 0, 0, 2)
+					indicator.ZIndex = 22
 					indicator.Parent = switcher
 
 					local SubTabFunctions = {
@@ -4934,6 +4930,7 @@ function MacLib:Window(Settings)
 					function SubTabFunctions:UpdateName(name)
 						Settings.Name = tostring(name)
 						switcherName.Text = Settings.Name
+						switcher.Size = UDim2.fromOffset(math.clamp(#Settings.Name * 7 + 28, 72, 150), 28)
 					end
 
 					function SubTabFunctions:SetVisibility(visible)
