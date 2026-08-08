@@ -1534,7 +1534,7 @@ function MacLib:Window(Settings)
 
 			local elementsScrollingUIListLayout = Instance.new("UIListLayout")
 			elementsScrollingUIListLayout.Name = "ElementsScrollingUIListLayout"
-			elementsScrollingUIListLayout.Padding = UDim.new(0, 15)
+			elementsScrollingUIListLayout.Padding = UDim.new(0, 12)
 			elementsScrollingUIListLayout.FillDirection = Enum.FillDirection.Horizontal
 			elementsScrollingUIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 			elementsScrollingUIListLayout.Parent = elementsScrolling
@@ -1551,7 +1551,7 @@ function MacLib:Window(Settings)
 
 			local leftUIListLayout = Instance.new("UIListLayout")
 			leftUIListLayout.Name = "LeftUIListLayout"
-			leftUIListLayout.Padding = UDim.new(0, 15)
+			leftUIListLayout.Padding = UDim.new(0, 12)
 			leftUIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 			leftUIListLayout.Parent = left
 
@@ -1570,7 +1570,7 @@ function MacLib:Window(Settings)
 
 			local rightUIListLayout = Instance.new("UIListLayout")
 			rightUIListLayout.Name = "RightUIListLayout"
-			rightUIListLayout.Padding = UDim.new(0, 15)
+			rightUIListLayout.Padding = UDim.new(0, 12)
 			rightUIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 			rightUIListLayout.Parent = right
 
@@ -1584,7 +1584,7 @@ function MacLib:Window(Settings)
 				section.Name = "Section"
 				section.AutomaticSize = Enum.AutomaticSize.Y
 				section.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				section.BackgroundTransparency = 0.98
+				section.BackgroundTransparency = 0.975
 				section.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				section.BorderSizePixel = 0
 				section.Position = UDim2.fromScale(0, 6.78e-08)
@@ -1603,21 +1603,21 @@ function MacLib:Window(Settings)
 				sectionUIStroke.Name = "SectionUIStroke"
 				sectionUIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 				sectionUIStroke.Color = Color3.fromRGB(255, 255, 255)
-				sectionUIStroke.Transparency = 0.95
+				sectionUIStroke.Transparency = 0.92
 				sectionUIStroke.Parent = section
 
 				local sectionUIListLayout = Instance.new("UIListLayout")
 				sectionUIListLayout.Name = "SectionUIListLayout"
-				sectionUIListLayout.Padding = UDim.new(0, 10)
+				sectionUIListLayout.Padding = UDim.new(0, 6)
 				sectionUIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 				sectionUIListLayout.Parent = section
 
 				local sectionUIPadding = Instance.new("UIPadding")
 				sectionUIPadding.Name = "SectionUIPadding"
-				sectionUIPadding.PaddingBottom = UDim.new(0, 20)
-				sectionUIPadding.PaddingLeft = UDim.new(0, 20)
-				sectionUIPadding.PaddingRight = UDim.new(0, 18)
-				sectionUIPadding.PaddingTop = UDim.new(0, 22)
+				sectionUIPadding.PaddingBottom = UDim.new(0, 16)
+				sectionUIPadding.PaddingLeft = UDim.new(0, 16)
+				sectionUIPadding.PaddingRight = UDim.new(0, 16)
+				sectionUIPadding.PaddingTop = UDim.new(0, 16)
 				sectionUIPadding.Parent = section
 
 				function SectionFunctions:Button(Settings, Flag)
@@ -1638,7 +1638,7 @@ function MacLib:Window(Settings)
 					buttonInteract.RichText = true
 					buttonInteract.TextColor3 = Color3.fromRGB(255, 255, 255)
 					buttonInteract.TextSize = 13
-					buttonInteract.TextTransparency = 0.5
+					buttonInteract.TextTransparency = 0.42
 					buttonInteract.TextTruncate = Enum.TextTruncate.AtEnd
 					buttonInteract.TextXAlignment = Enum.TextXAlignment.Left
 					buttonInteract.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -1663,8 +1663,8 @@ function MacLib:Window(Settings)
 					buttonImage.Parent = button
 
 					local TweenSettings = {
-						DefaultTransparency = 0.5,
-						HoverTransparency = 0.3,
+						DefaultTransparency = 0.42,
+						HoverTransparency = 0.22,
 
 						EasingStyle = Enum.EasingStyle.Sine,
 					}
@@ -1733,7 +1733,7 @@ function MacLib:Window(Settings)
 					toggleName.RichText = true
 					toggleName.TextColor3 = Color3.fromRGB(255, 255, 255)
 					toggleName.TextSize = 13
-					toggleName.TextTransparency = 0.5
+					toggleName.TextTransparency = 0.42
 					toggleName.TextTruncate = Enum.TextTruncate.AtEnd
 					toggleName.TextXAlignment = Enum.TextXAlignment.Left
 					toggleName.TextYAlignment = Enum.TextYAlignment.Top
@@ -1874,7 +1874,7 @@ function MacLib:Window(Settings)
 					sliderName.RichText = true
 					sliderName.TextColor3 = Color3.fromRGB(255, 255, 255)
 					sliderName.TextSize = 13
-					sliderName.TextTransparency = 0.5
+					sliderName.TextTransparency = 0.42
 					sliderName.TextTruncate = Enum.TextTruncate.AtEnd
 					sliderName.TextXAlignment = Enum.TextXAlignment.Left
 					sliderName.TextYAlignment = Enum.TextYAlignment.Top
@@ -2193,7 +2193,7 @@ function MacLib:Window(Settings)
 					inputName.RichText = true
 					inputName.TextColor3 = Color3.fromRGB(255, 255, 255)
 					inputName.TextSize = 13
-					inputName.TextTransparency = 0.5
+					inputName.TextTransparency = 0.42
 					inputName.TextTruncate = Enum.TextTruncate.AtEnd
 					inputName.TextXAlignment = Enum.TextXAlignment.Left
 					inputName.TextYAlignment = Enum.TextYAlignment.Top
@@ -2370,7 +2370,7 @@ function MacLib:Window(Settings)
 					keybindName.RichText = true
 					keybindName.TextColor3 = Color3.fromRGB(255, 255, 255)
 					keybindName.TextSize = 13
-					keybindName.TextTransparency = 0.5
+					keybindName.TextTransparency = 0.42
 					keybindName.TextTruncate = Enum.TextTruncate.AtEnd
 					keybindName.TextXAlignment = Enum.TextXAlignment.Left
 					keybindName.TextYAlignment = Enum.TextYAlignment.Top
@@ -2583,7 +2583,7 @@ function MacLib:Window(Settings)
 					dropdownName.RichText = true
 					dropdownName.TextColor3 = Color3.fromRGB(255, 255, 255)
 					dropdownName.TextSize = 13
-					dropdownName.TextTransparency = 0.5
+					dropdownName.TextTransparency = 0.42
 					dropdownName.TextTruncate = Enum.TextTruncate.SplitWord
 					dropdownName.TextXAlignment = Enum.TextXAlignment.Left
 					dropdownName.AutomaticSize = Enum.AutomaticSize.Y
@@ -4505,7 +4505,7 @@ function MacLib:Window(Settings)
 					headerText.Text = HeaderFunctions.Settings.Text or HeaderFunctions.Settings.Name
 					headerText.TextColor3 = Color3.fromRGB(255, 255, 255)
 					headerText.TextSize = 16
-					headerText.TextTransparency = 0.3
+					headerText.TextTransparency = 0.18
 					headerText.TextWrapped = true
 					headerText.TextXAlignment = Enum.TextXAlignment.Left
 					headerText.AutomaticSize = Enum.AutomaticSize.Y
