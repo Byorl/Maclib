@@ -966,11 +966,15 @@ function MacLib:Window(Settings)
 	base.Parent = macLib
 
 	function WindowFunctions:UpdateTitle(NewTitle)
+		local restoreIdentity = elevateThreadIdentity()
 		title.Text = NewTitle
+		restoreIdentity()
 	end
 
 	function WindowFunctions:UpdateSubtitle(NewSubtitle)
+		local restoreIdentity = elevateThreadIdentity()
 		subtitle.Text = NewSubtitle
+		restoreIdentity()
 	end
 
 	local hovering
@@ -1385,12 +1389,16 @@ function MacLib:Window(Settings)
 		end)
 
 		function GlobalSettingFunctions:UpdateName(NewName)
+			local restoreIdentity = elevateThreadIdentity()
 			settingName.Text = NewName
+			restoreIdentity()
 		end
 
 		function GlobalSettingFunctions:UpdateState(NewState)
+			local restoreIdentity = elevateThreadIdentity()
 			Toggle(NewState)
 			toggled = NewState
+			restoreIdentity()
 		end
 
 		return GlobalSettingFunctions
@@ -1735,10 +1743,14 @@ function MacLib:Window(Settings)
 
 					buttonInteract.MouseButton1Click:Connect(Callback)
 					function ButtonFunctions:UpdateName(Name)
+						local restoreIdentity = elevateThreadIdentity()
 						buttonInteract.Text = Name
+						restoreIdentity()
 					end
 					function ButtonFunctions:SetVisibility(State)
+						local restoreIdentity = elevateThreadIdentity()
 						button.Visible = State
+						restoreIdentity()
 					end
 
 					if Flag then
@@ -1868,17 +1880,23 @@ function MacLib:Window(Settings)
 						Toggle()
 					end
 					function ToggleFunctions:UpdateState(State)
+						local restoreIdentity = elevateThreadIdentity()
 						togglebool = State
 						NewState(togglebool, ToggleFunctions.Settings.Callback)
+						restoreIdentity()
 					end
 					function ToggleFunctions:GetState()
 						return togglebool
 					end
 					function ToggleFunctions:UpdateName(Name)
+						local restoreIdentity = elevateThreadIdentity()
 						toggleName.Text = Name
+						restoreIdentity()
 					end
 					function ToggleFunctions:SetVisibility(State)
+						local restoreIdentity = elevateThreadIdentity()
 						toggle.Visible = State
+						restoreIdentity()
 					end
 
 					if Flag then
@@ -2188,13 +2206,19 @@ function MacLib:Window(Settings)
 					section:GetPropertyChangedSignal("AbsoluteSize"):Connect(updateSliderBarSize)
 
 					function SliderFunctions:UpdateName(Name)
+						local restoreIdentity = elevateThreadIdentity()
 						sliderName.Text = Name
+						restoreIdentity()
 					end
 					function SliderFunctions:SetVisibility(State)
+						local restoreIdentity = elevateThreadIdentity()
 						slider.Visible = State
+						restoreIdentity()
 					end
 					function SliderFunctions:UpdateValue(Value)
+						local restoreIdentity = elevateThreadIdentity()
 						SetValue(tonumber(Value), true)
+						restoreIdentity()
 					end
 					function SliderFunctions:GetValue()
 						return finalValue
@@ -2356,18 +2380,25 @@ function MacLib:Window(Settings)
 					end)
 
 					function InputFunctions:UpdateName(Name)
+						local restoreIdentity = elevateThreadIdentity()
 						inputName.Text = Name
+						restoreIdentity()
 					end
 					function InputFunctions:SetVisibility(State)
+						local restoreIdentity = elevateThreadIdentity()
 						input.Visible = State
+						restoreIdentity()
 					end
 					function InputFunctions:GetInput()
 						return InputBox.Text
 					end
 					function InputFunctions:UpdatePlaceholder(Placeholder)
+						local restoreIdentity = elevateThreadIdentity()
 						inputBox.PlaceholderText = Placeholder
+						restoreIdentity()
 					end
 					function InputFunctions:UpdateText(Text)
+						local restoreIdentity = elevateThreadIdentity()
 						local filteredText = AcceptedCharacters(Text)
 						InputBox.Text = filteredText
 						InputFunctions.Text = filteredText
@@ -2376,6 +2407,7 @@ function MacLib:Window(Settings)
 								InputFunctions.Settings.Callback(filteredText)
 							end
 						end)
+						restoreIdentity()
 					end
 
 					if Flag then
@@ -3090,15 +3122,20 @@ function MacLib:Window(Settings)
 					end
 
 					function DropdownFunctions:UpdateName(New)
+						local restoreIdentity = elevateThreadIdentity()
 						dropdownName.Text = New
+						restoreIdentity()
 					end
 					function DropdownFunctions:SetVisibility(State)
+						local restoreIdentity = elevateThreadIdentity()
 						dropdown.Visible = State
+						restoreIdentity()
 					end
 					function DropdownFunctions:UpdateSelection(newSelection)
 						if not newSelection then
 							return
 						end
+						local restoreIdentity = elevateThreadIdentity()
 
 						for option, _ in pairs(OptionObjs) do
 							Toggle(option, false)
@@ -3142,17 +3179,21 @@ function MacLib:Window(Settings)
 								DropdownFunctions.Settings.Callback(selectedOptions[1] or nil)
 							end
 						end
+						restoreIdentity()
 					end
 					function DropdownFunctions:InsertOptions(newOptions)
 						if not newOptions then
 							return
 						end
+						local restoreIdentity = elevateThreadIdentity()
 						DropdownFunctions.Settings.Options = newOptions
 						for i, v in pairs(newOptions) do
 							addOption(i, v)
 						end
+						restoreIdentity()
 					end
 					function DropdownFunctions:ClearOptions()
+						local restoreIdentity = elevateThreadIdentity()
 						for _, optionData in pairs(OptionObjs) do
 							optionData.Button:Destroy()
 						end
@@ -3162,6 +3203,7 @@ function MacLib:Window(Settings)
 						if dropped then
 							dropdown.Size = UDim2.new(1, 0, 0, CalculateDropdownSize())
 						end
+						restoreIdentity()
 					end
 					function DropdownFunctions:GetOptions()
 						local optionsStatus = {}
@@ -4550,10 +4592,14 @@ function MacLib:Window(Settings)
 					headerText.Parent = header
 
 					function HeaderFunctions:UpdateName(New)
+						local restoreIdentity = elevateThreadIdentity()
 						headerText.Text = New
+						restoreIdentity()
 					end
 					function HeaderFunctions:SetVisibility(State)
+						local restoreIdentity = elevateThreadIdentity()
 						header.Visible = State
+						restoreIdentity()
 					end
 
 					if Flag then
@@ -4594,10 +4640,14 @@ function MacLib:Window(Settings)
 					labelText.Parent = label
 
 					function LabelFunctions:UpdateName(New)
+						local restoreIdentity = elevateThreadIdentity()
 						labelText.Text = New
+						restoreIdentity()
 					end
 					function LabelFunctions:SetVisibility(State)
+						local restoreIdentity = elevateThreadIdentity()
 						label.Visible = State
+						restoreIdentity()
 					end
 
 					if Flag then
@@ -4638,10 +4688,14 @@ function MacLib:Window(Settings)
 					subLabelText.Parent = subLabel
 
 					function SubLabelFunctions:UpdateName(New)
+						local restoreIdentity = elevateThreadIdentity()
 						subLabelText.Text = New
+						restoreIdentity()
 					end
 					function SubLabelFunctions:SetVisibility(State)
+						local restoreIdentity = elevateThreadIdentity()
 						subLabel.Visible = State
+						restoreIdentity()
 					end
 
 					if Flag then
@@ -4707,13 +4761,19 @@ function MacLib:Window(Settings)
 					paragraphBody.Parent = paragraph
 
 					function ParagraphFunctions:UpdateHeader(New)
+						local restoreIdentity = elevateThreadIdentity()
 						paragraphHeader.Text = New
+						restoreIdentity()
 					end
 					function ParagraphFunctions:UpdateBody(New)
+						local restoreIdentity = elevateThreadIdentity()
 						paragraphBody.Text = New
+						restoreIdentity()
 					end
 					function ParagraphFunctions:SetVisibility(State)
+						local restoreIdentity = elevateThreadIdentity()
 						paragraph.Visible = State
+						restoreIdentity()
 					end
 
 					if Flag then
