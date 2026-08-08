@@ -25,8 +25,12 @@ local hasGlobalSetting
 
 local function elevateThreadIdentity()
 	local environment = (getgenv and getgenv()) or _G
-	local setter = rawget(environment, "setthreadidentity") or rawget(environment, "setidentity")
-	local getter = rawget(environment, "getthreadidentity") or rawget(environment, "getidentity")
+	local setter = rawget(environment, "setthreadidentity")
+		or rawget(environment, "set_thread_identity")
+		or rawget(environment, "setidentity")
+	local getter = rawget(environment, "getthreadidentity")
+		or rawget(environment, "get_thread_identity")
+		or rawget(environment, "getidentity")
 	local synTable = rawget(environment, "syn")
 	if not setter and type(synTable) == "table" then
 		setter = synTable.set_thread_identity
@@ -41,7 +45,10 @@ local function elevateThreadIdentity()
 	if type(getter) == "function" then
 		hadPrevious, previous = pcall(getter)
 	end
-	pcall(setter, 8)
+	local elevated = pcall(setter, 8)
+	if not elevated then
+		pcall(setter, 7)
+	end
 	return function()
 		if hadPrevious then
 			pcall(setter, previous)
