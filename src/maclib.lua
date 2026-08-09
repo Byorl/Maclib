@@ -24,14 +24,19 @@ local acrylicBlur
 local hasGlobalSetting
 
 local function elevateThreadIdentity()
-	local environment = (getgenv and getgenv()) or _G
-	local setter = rawget(environment, "setthreadidentity")
-		or rawget(environment, "set_thread_identity")
-		or rawget(environment, "setidentity")
-	local getter = rawget(environment, "getthreadidentity")
-		or rawget(environment, "get_thread_identity")
-		or rawget(environment, "getidentity")
-	local synTable = rawget(environment, "syn")
+	local environment = _G
+	if type(getgenv) == "function" then
+		local ok, value = pcall(getgenv)
+		if ok and type(value) == "table" then environment = value end
+	end
+	if type(environment) ~= "table" then return function() end end
+	local setter = environment.setthreadidentity
+		or environment.set_thread_identity
+		or environment.setidentity
+	local getter = environment.getthreadidentity
+		or environment.get_thread_identity
+		or environment.getidentity
+	local synTable = environment.syn
 	if not setter and type(synTable) == "table" then
 		setter = synTable.set_thread_identity
 	end
@@ -2361,10 +2366,12 @@ function MacLib:Window(Settings)
 					InputBox.AutomaticSize = Enum.AutomaticSize.None
 
 					local function checkSize()
-						local totalWidth = Input.AbsoluteSize.X
-
-						local maxWidth = math.max(80, (totalWidth - 8) / baseUIScale.Scale)
-						Constraint.MaxSize = Vector2.new(maxWidth, 9e9)
+						runWithElevatedIdentity(function()
+							local totalWidth = Input.AbsoluteSize.X
+							local scale = math.max(tonumber(baseUIScale.Scale) or 1, 0.001)
+							local maxWidth = math.max(80, (totalWidth - 8) / scale)
+							Constraint.MaxSize = Vector2.new(maxWidth, 9e9)
+						end)
 					end
 
 					checkSize()
@@ -5003,21 +5010,23 @@ function MacLib:Window(Settings)
 					table.insert(subTabs, entry)
 
 					function SubTabFunctions:Select()
-						selectedSubTab = self
-						TabFunctions.SelectedSubTab = self
-						for _, current in ipairs(subTabs) do
-							local selected = current.Functions == self
-							current.Page.Visible = selected
-							Tween(current.Switcher, TweenInfo.new(0.15, Enum.EasingStyle.Sine), {
-								BackgroundTransparency = selected and 0.96 or 1,
-							}):Play()
-							Tween(current.Name, TweenInfo.new(0.15, Enum.EasingStyle.Sine), {
-								TextTransparency = selected and 0.1 or 0.5,
-							}):Play()
-							Tween(current.Indicator, TweenInfo.new(0.15, Enum.EasingStyle.Sine), {
-								BackgroundTransparency = selected and 0.15 or 1,
-							}):Play()
-						end
+						runWithElevatedIdentity(function()
+							selectedSubTab = self
+							TabFunctions.SelectedSubTab = self
+							for _, current in ipairs(subTabs) do
+								local selected = current.Functions == self
+								current.Page.Visible = selected
+								Tween(current.Switcher, TweenInfo.new(0.15, Enum.EasingStyle.Sine), {
+									BackgroundTransparency = selected and 0.96 or 1,
+								}):Play()
+								Tween(current.Name, TweenInfo.new(0.15, Enum.EasingStyle.Sine), {
+									TextTransparency = selected and 0.1 or 0.5,
+								}):Play()
+								Tween(current.Indicator, TweenInfo.new(0.15, Enum.EasingStyle.Sine), {
+									BackgroundTransparency = selected and 0.15 or 1,
+								}):Play()
+							end
+						end)
 					end
 
 					function SubTabFunctions:Section(sectionSettings)
@@ -5033,21 +5042,25 @@ function MacLib:Window(Settings)
 					end
 
 					function SubTabFunctions:UpdateName(name)
-						Settings.Name = tostring(name)
-						switcherName.Text = Settings.Name
-						switcher.Size = UDim2.fromOffset(math.clamp(#Settings.Name * 7 + 28, 72, 150), 28)
+						runWithElevatedIdentity(function()
+							Settings.Name = tostring(name)
+							switcherName.Text = Settings.Name
+							switcher.Size = UDim2.fromOffset(math.clamp(#Settings.Name * 7 + 28, 72, 150), 28)
+						end)
 					end
 
 					function SubTabFunctions:SetVisibility(visible)
-						switcher.Visible = visible == true
-						if visible ~= true and selectedSubTab == self then
-							for _, current in ipairs(subTabs) do
-								if current.Functions ~= self and current.Switcher.Visible then
-									current.Functions:Select()
-									break
+						runWithElevatedIdentity(function()
+							switcher.Visible = visible == true
+							if visible ~= true and selectedSubTab == self then
+								for _, current in ipairs(subTabs) do
+									if current.Functions ~= self and current.Switcher.Visible then
+										current.Functions:Select()
+										break
+									end
 								end
 							end
-						end
+						end)
 					end
 
 					switcher.MouseButton1Click:Connect(function()
