@@ -2186,18 +2186,21 @@ function MacLib:Window(Settings)
 					end)
 
 					local function updateSliderBarSize()
-						local padding = sliderElementsUIListLayout.Padding.Offset
-						local sliderValueWidth = sliderValue.AbsoluteSize.X
-						local totalWidth = sliderElements.AbsoluteSize.X
-
-						local newBarWidth =
-							math.max(48, (totalWidth - (padding + sliderValueWidth + 4)) / baseUIScale.Scale)
-						sliderBar.Size = UDim2.new(
-							sliderBar.Size.X.Scale,
-							newBarWidth,
-							sliderBar.Size.Y.Scale,
-							sliderBar.Size.Y.Offset
-						)
+						local restoreIdentity = elevateThreadIdentity()
+						pcall(function()
+							local padding = sliderElementsUIListLayout.Padding.Offset
+							local sliderValueWidth = sliderValue.AbsoluteSize.X
+							local totalWidth = sliderElements.AbsoluteSize.X
+							local scale = math.max(tonumber(baseUIScale.Scale) or 1, 0.001)
+							local newBarWidth = math.max(48, (totalWidth - (padding + sliderValueWidth + 4)) / scale)
+							sliderBar.Size = UDim2.new(
+								sliderBar.Size.X.Scale,
+								newBarWidth,
+								sliderBar.Size.Y.Scale,
+								sliderBar.Size.Y.Offset
+							)
+						end)
+						restoreIdentity()
 					end
 
 					updateSliderBarSize()
