@@ -12,5 +12,9 @@ assert(
 	string.find(source, "function SubTabFunctions:Select()\n\t\t\t\t\t\trunWithElevatedIdentity", 1, true),
 	"subtab selection is not protected on restricted callbacks"
 )
+assert(
+	string.find(source, "Selected = table.clone(selectedOptions)", 1, true),
+	"programmatic dropdown selection does not preserve deterministic readback"
+)
 
 print("MacLib restricted-thread regression tests passed")

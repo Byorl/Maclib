@@ -3155,37 +3155,31 @@ function MacLib:Window(Settings)
 							return
 						end
 						local restoreIdentity = elevateThreadIdentity()
-
-						for option, _ in pairs(OptionObjs) do
-							Toggle(option, false)
-						end
-
 						local selectedOptions = {}
 						if type(newSelection) == "number" then
 							for option, data in pairs(OptionObjs) do
-								local isSelected = data.Index == newSelection
-								Toggle(option, isSelected)
-								if isSelected then
+								if data.Index == newSelection then
 									table.insert(selectedOptions, option)
 								end
 							end
 						elseif type(newSelection) == "string" then
-							for option, data in pairs(OptionObjs) do
-								local isSelected = option == newSelection
-								Toggle(option, isSelected)
-								if isSelected then
+							for option in pairs(OptionObjs) do
+								if option == newSelection then
 									table.insert(selectedOptions, option)
 								end
 							end
 						elseif type(newSelection) == "table" then
-							for option, _ in pairs(OptionObjs) do
-								local isSelected = table.find(newSelection, option) ~= nil
-								Toggle(option, isSelected)
-								if isSelected then
+							for option in pairs(OptionObjs) do
+								if table.find(newSelection, option) ~= nil then
 									table.insert(selectedOptions, option)
 								end
 							end
 						end
+						for option in pairs(OptionObjs) do
+							Toggle(option, table.find(selectedOptions, option) ~= nil)
+						end
+						Selected = table.clone(selectedOptions)
+						DropdownFunctions.Value = DropdownFunctions.Settings.Multi and Selected or Selected[1]
 
 						if DropdownFunctions.Settings.Callback then
 							if DropdownFunctions.Settings.Multi then
