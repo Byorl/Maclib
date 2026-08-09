@@ -56,6 +56,19 @@ local function elevateThreadIdentity()
 	end
 end
 
+local function runWithElevatedIdentity(callback, ...)
+	local arguments = table.pack(...)
+	local restoreIdentity = elevateThreadIdentity()
+	local results = table.pack(pcall(function()
+		return callback(table.unpack(arguments, 1, arguments.n))
+	end))
+	restoreIdentity()
+	if not results[1] then
+		error(results[2], 0)
+	end
+	return table.unpack(results, 2, results.n)
+end
+
 local tabs = {}
 local currentTabInstance = nil
 local tabIndex = 0
@@ -95,7 +108,9 @@ local function GetGui()
 end
 
 local function Tween(instance, tweeninfo, propertytable)
-	return TweenService:Create(instance, tweeninfo, propertytable)
+	return runWithElevatedIdentity(function()
+		return TweenService:Create(instance, tweeninfo, propertytable)
+	end)
 end
 
 --// Library Functions
@@ -1331,6 +1346,7 @@ function MacLib:Window(Settings)
 
 		local tweens = {
 			checkIn = Tween(checkmark, TweenInfo.new(tweensettings.duration, tweensettings.easingStyle), {
+				TextTransparency = 0,
 				Size = UDim2.new(
 					checkmark.Size.X.Scale,
 					tweensettings.checkSizeIncrease,
@@ -1339,6 +1355,7 @@ function MacLib:Window(Settings)
 				),
 			}),
 			checkOut = Tween(checkmark, TweenInfo.new(tweensettings.duration, tweensettings.easingStyle), {
+				TextTransparency = 1,
 				Size = UDim2.new(
 					checkmark.Size.X.Scale,
 					tweensettings.checkSizeDecrease,
@@ -1355,23 +1372,15 @@ function MacLib:Window(Settings)
 		}
 
 		local function Toggle(State)
-			if not State then
-				tweens.checkOut:Play()
-				tweens.nameOut:Play()
-				checkmark:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
-					if checkmark.AbsoluteSize.X <= 0 then
-						checkmark.TextTransparency = 1
-					end
-				end)
-			else
-				tweens.checkIn:Play()
-				tweens.nameIn:Play()
-				checkmark:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
-					if checkmark.AbsoluteSize.X > 0 then
-						checkmark.TextTransparency = 0
-					end
-				end)
-			end
+			runWithElevatedIdentity(function()
+				if not State then
+					tweens.checkOut:Play()
+					tweens.nameOut:Play()
+				else
+					tweens.checkIn:Play()
+					tweens.nameIn:Play()
+				end
+			end)
 		end
 
 		local toggled = Settings.Default
@@ -5063,37 +5072,39 @@ function MacLib:Window(Settings)
 			end
 
 			local function SelectCurrentTab()
-				local easetime = 0.15
+				runWithElevatedIdentity(function()
+					local easetime = 0.15
 
-				if currentTabInstance then
-					currentTabInstance.Parent = nil
-				end
-
-				for i, tabInfo in pairs(tabs) do
-					Tween(i, TweenInfo.new(easetime, Enum.EasingStyle.Sine), {
-						BackgroundTransparency = (i == tabSwitcher and 0.98 or 1),
-					}):Play()
-
-					if tabInfo.tabStroke then
-						Tween(tabInfo.tabStroke, TweenInfo.new(easetime, Enum.EasingStyle.Sine), {
-							Transparency = (i == tabSwitcher and 0.95 or 1),
-						}):Play()
+					if currentTabInstance then
+						currentTabInstance.Parent = nil
 					end
-					if tabInfo.switcherImage then
-						Tween(tabInfo.switcherImage, TweenInfo.new(easetime, Enum.EasingStyle.Sine), {
-							ImageTransparency = (i == tabSwitcher and 0.1 or 0.5),
-						}):Play()
-					end
-					if tabInfo.switcherName then
-						Tween(tabInfo.switcherName, TweenInfo.new(easetime, Enum.EasingStyle.Sine), {
-							TextTransparency = (i == tabSwitcher and 0.1 or 0.5),
-						}):Play()
-					end
-				end
 
-				tabs[tabSwitcher].tabContent.Parent = content
-				currentTabInstance = tabs[tabSwitcher].tabContent
-				currentTab.Text = Settings.Name
+					for i, tabInfo in pairs(tabs) do
+						Tween(i, TweenInfo.new(easetime, Enum.EasingStyle.Sine), {
+							BackgroundTransparency = (i == tabSwitcher and 0.98 or 1),
+						}):Play()
+
+						if tabInfo.tabStroke then
+							Tween(tabInfo.tabStroke, TweenInfo.new(easetime, Enum.EasingStyle.Sine), {
+								Transparency = (i == tabSwitcher and 0.95 or 1),
+							}):Play()
+						end
+						if tabInfo.switcherImage then
+							Tween(tabInfo.switcherImage, TweenInfo.new(easetime, Enum.EasingStyle.Sine), {
+								ImageTransparency = (i == tabSwitcher and 0.1 or 0.5),
+							}):Play()
+						end
+						if tabInfo.switcherName then
+							Tween(tabInfo.switcherName, TweenInfo.new(easetime, Enum.EasingStyle.Sine), {
+								TextTransparency = (i == tabSwitcher and 0.1 or 0.5),
+							}):Play()
+						end
+					end
+
+					tabs[tabSwitcher].tabContent.Parent = content
+					currentTabInstance = tabs[tabSwitcher].tabContent
+					currentTab.Text = Settings.Name
+				end)
 			end
 
 			tabSwitcher.MouseButton1Click:Connect(function()
